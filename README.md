@@ -3,11 +3,12 @@
 Week 10 (LIRI Bot)
 
 ### Overview
-In this assignment, we are making LIRI or *Language* Interpretation and Recognition Interface.
+In this assignment -- making LIRI or *Language Interpretation and Recognition Interface*
 
 LIRI is a command line node app that takes in parameters and gives you back data.
 
-What Each Command Should Do
+Commands:
+
 1. `node liri.js my-tweets`
     * This will show your last 20 tweets and when they were created at in your terminal
 
@@ -26,15 +27,15 @@ What Each Command Should Do
 
     * This will output the following information to your terminal/bash window:
 
-        * Title of the movie.
-        * Year the movie came out.
-        * IMDB Rating of the movie.
-        * Country where the movie was produced.
-        * Language of the movie.
-        * Plot of the movie.
-        * Actors in the movie.
-        * Rotten Tomatoes Rating.
-        * Rotten Tomatoes URL.
+        * Title of the movie.  [Title]
+        * Year the movie came out. [Year]
+        * IMDB Rating of the movie.[imdbRating]
+        * Country where the movie was produced. [Country]
+        * Language of the movie. [Language]
+        * Plot of the movie. [Plot]
+        * Actors in the movie. [Actors]
+        * Rotten Tomatoes Rating. []
+        * Rotten Tomatoes URL. []
 
     * If the user doesn't type a movie in, the program will output data for the movie 'Mr. Nobody.'
 
