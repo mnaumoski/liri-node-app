@@ -42,33 +42,10 @@ switch (command) {
         }
         break;
     case "my-tweets":
-        var Twitter = require('twitter');
-
-        var client = new Twitter(keys.twitterKeys);
-
-        var params = { screen_name: 'MarijaNaumoski', exclude_replies: true, trim_user: true };
-
-        client.get('statuses/user_timeline', params, function(error, tweets, response) {
-            if (!error) {
-                for (var i = 0; i < 20; i++) {
-                    console.log ("========================");
-                    console.log("Tweet number " + i);
-                    console.log(JSON.stringify("Tweet posted on " + tweets[i].created_at, null, 2));
-                    console.log(JSON.stringify("I posted the following: -- " + "'" + tweets[i].text + "'", null, 2));
-                }
-            }
-        });
+        findTweets();
         break;
     case "spotify-this-song":
         findSong();
-        // * Artist(s)
-        // * The song's name
-        // * A preview link of the song from Spotify
-        // * The album that the song is from
-
-        // * if no song is provided then your program will default to
-        // * "The Sign" by Ace of Base
-
         break;
 
         // case "do-what-it-says":
@@ -85,26 +62,49 @@ function findSong() {
 
     var songName = process.argv[3];
 
-    spotify.search({ type: 'track', query: songName }, function(err, data) {
-        if (err) {
-            console.log('Error occurred: ' + err);
-            return;
-        }
-        if (!err) {
-            console.log(data);
-            // console.log(JSON.parse(data)['tracks']);
-        }
-    });
-}
+    if (songName == null) {
 
+        spotify.lookup({ type: 'track', id: '0hrBpAOgrt8RXigk83LLNE' }, function(err, data) {
+            console.log ("Song name: " + data.name);
+            console.log ("Band: " + data.artists[0].name);
+
+                })
+
+    } else {
+
+        spotify.search({ type: 'track', query: songName }, function(err, data) {
+
+                if (err) {
+                    console.log('Error occurred: ' + err);
+                    return;
+                    }
+                if (!err) {
+
+                    console.log("========================");
+                    // name of artist
+                    console.log("Name of artist: " + JSON.stringify(data.tracks.items[0].artists[0].name, null, 2));
+                    // name of song
+                    console.log("Song name: " + JSON.stringify(data.tracks.items[0].name, null, 2));
+
+                    console.log("Use this link for a song preview: " + JSON.stringify(data.tracks.items[0].preview_url, null, 2));
+
+                    // Album where the songs come from
+                    console.log("Album name: " + JSON.stringify(data.tracks.items[0].album.name, null, 2));
+
+                    console.log("========================");
+                    }
+        });
+    }
+}
 function findMovie() {
 
     var movieName = process.argv[3]; //input name of movie
-
+    // query for omdb
     queryUrl = 'http://www.omdbapi.com/?t=' + movieName + '&y=&plot=short&r=json&tomatoes=true';
-
+    //request data only if there are no errors
     request(queryUrl, function(error, response, body) {
         if (!error && response.statusCode == 200) {
+            console.log("========================");
             // title of movie
             console.log("The title of the movie is " + JSON.parse(body)['Title']);
             // year of release
@@ -123,13 +123,33 @@ function findMovie() {
             console.log("Rotten tomatoes rating is: " + JSON.parse(body)['tomatoRating']);
             // rotten tomatoes URL
             console.log("Rotten tomatoes URL: " + JSON.parse(body)['tomatoURL']);
+            console.log("========================");
 
         }
-        // when user search is empty
-        // request('http://www.omdbapi.com/?t=Mr.+Nobody&y=&plot=short&r=json', function(error, response, body) {
-        //     if (!error && response.statusCode == 200) {
-        //         console.log("The title of the movie is " + JSON.parse(body)['Title']);
-        //     }
-        // });
     })
+}
+
+function findTweets() {
+    // require twitter package
+    var Twitter = require('twitter');
+    //var that gets the twitter keys from keys.js
+    var client = new Twitter(keys.twitterKeys);
+    // parametars used to get the info we need
+    var params = { screen_name: 'MarijaNaumoski', exclude_replies: true, trim_user: true };
+
+    client.get('statuses/user_timeline', params, function(error, tweets, response) {
+
+        if (!error) {
+            // for loop to display 20 tweets 
+            for (var i = 0; i < 20; i++) {
+                console.log("========================");
+                console.log("Tweet number " + i);
+                console.log(JSON.stringify("On " + tweets[i].created_at + " I posted the following: -- " + "'" + tweets[i].text + "'", null, 2));
+            }
+        }
+        if (error) {
+            console.log('Error occurred: ' + error);
+            return;
+        }
+    });
 }
