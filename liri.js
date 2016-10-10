@@ -12,10 +12,10 @@ var command = process.argv[2];
 switch (command) {
     case "movie-this": // `node liri.js movie-this '<movie name here>'`
         if (movieName == null) {
-          // movieName = "Mr.+Nobody";
-       queryUrl = 'http://www.omdbapi.com/?t=Mr.+Nobody&y=&plot=short&r=json';
+            // movieName = "Mr.+Nobody";
+            queryUrl = 'http://www.omdbapi.com/?t=Mr.+Nobody&y=&plot=short&r=json';
 
-        request(queryUrl, function(error, response, body) {
+            request(queryUrl, function(error, response, body) {
                 // title of movie
                 console.log("The title of the movie is " + JSON.parse(body)['Title']);
                 // year of release
@@ -37,21 +37,25 @@ switch (command) {
 
             });
 
+        } else {
+            findMovie()
         }
-          else {
-          findMovie() }
         break;
     case "my-tweets":
         var Twitter = require('twitter');
 
         var client = new Twitter(keys.twitterKeys);
 
-        var params = { screen_name: 'MarijaNaumoski', count: 1, exclude_replies: true, trim_user: true };
+        var params = { screen_name: 'MarijaNaumoski', exclude_replies: true, trim_user: true };
 
         client.get('statuses/user_timeline', params, function(error, tweets, response) {
             if (!error) {
-                console.log(tweets);
-                // console.log(tweets[1].created_at)
+                for (var i = 0; i < 20; i++) {
+                    console.log ("========================");
+                    console.log("Tweet number " + i);
+                    console.log(JSON.stringify("Tweet posted on " + tweets[i].created_at, null, 2));
+                    console.log(JSON.stringify("I posted the following: -- " + "'" + tweets[i].text + "'", null, 2));
+                }
             }
         });
         break;
@@ -87,8 +91,8 @@ function findSong() {
             return;
         }
         if (!err) {
-          console.log(data);
-          // console.log(JSON.parse(data)['tracks']);
+            console.log(data);
+            // console.log(JSON.parse(data)['tracks']);
         }
     });
 }
@@ -98,34 +102,34 @@ function findMovie() {
     var movieName = process.argv[3]; //input name of movie
 
     queryUrl = 'http://www.omdbapi.com/?t=' + movieName + '&y=&plot=short&r=json&tomatoes=true';
-    
-    request(queryUrl, function(error, response, body) {
-            if (!error && response.statusCode == 200) {
-                // title of movie
-                console.log("The title of the movie is " + JSON.parse(body)['Title']);
-                // year of release
-                console.log("The release year of " + movieName + " is " + JSON.parse(body)['Year'] + ".");
-                //rating of the movie
-                console.log("Rating: " + movieName + " has an imdb rating of " + JSON.parse(body)['imdbRating'] + ".");
-                // country
-                console.log("Country: " + movieName + " has been produced in " + JSON.parse(body)['Country'] + ".");
-                // language
-                console.log("Language: " + JSON.parse(body)['Language'] + ".");
-                // plot
-                console.log(movieName + "'s plot: " + JSON.parse(body)['Plot'] + ".");
-                // actors
-                console.log("Actors in the movie: " + JSON.parse(body)['Actors'] + ".");
-                // rotten tomatoes rating
-                console.log("Rotten tomatoes rating is: " + JSON.parse(body)['tomatoRating']);
-                // rotten tomatoes URL
-                console.log("Rotten tomatoes URL: " + JSON.parse(body)['tomatoURL']);
 
-            }
-    // when user search is empty
-    // request('http://www.omdbapi.com/?t=Mr.+Nobody&y=&plot=short&r=json', function(error, response, body) {
-    //     if (!error && response.statusCode == 200) {
-    //         console.log("The title of the movie is " + JSON.parse(body)['Title']);
-    //     }
-    // });
+    request(queryUrl, function(error, response, body) {
+        if (!error && response.statusCode == 200) {
+            // title of movie
+            console.log("The title of the movie is " + JSON.parse(body)['Title']);
+            // year of release
+            console.log("The release year of " + movieName + " is " + JSON.parse(body)['Year'] + ".");
+            //rating of the movie
+            console.log("Rating: " + movieName + " has an imdb rating of " + JSON.parse(body)['imdbRating'] + ".");
+            // country
+            console.log("Country: " + movieName + " has been produced in " + JSON.parse(body)['Country'] + ".");
+            // language
+            console.log("Language: " + JSON.parse(body)['Language'] + ".");
+            // plot
+            console.log(movieName + "'s plot: " + JSON.parse(body)['Plot'] + ".");
+            // actors
+            console.log("Actors in the movie: " + JSON.parse(body)['Actors'] + ".");
+            // rotten tomatoes rating
+            console.log("Rotten tomatoes rating is: " + JSON.parse(body)['tomatoRating']);
+            // rotten tomatoes URL
+            console.log("Rotten tomatoes URL: " + JSON.parse(body)['tomatoURL']);
+
+        }
+        // when user search is empty
+        // request('http://www.omdbapi.com/?t=Mr.+Nobody&y=&plot=short&r=json', function(error, response, body) {
+        //     if (!error && response.statusCode == 200) {
+        //         console.log("The title of the movie is " + JSON.parse(body)['Title']);
+        //     }
+        // });
     })
 }
