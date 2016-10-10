@@ -17,17 +17,15 @@ switch (command) {
 
             request(queryUrl, function(error, response, body) {
                 // title of movie
-                console.log("The title of the movie is " + JSON.parse(body)['Title']);
-                // year of release
-                console.log("The release year of " + movieName + " is " + JSON.parse(body)['Year'] + ".");
-                //rating of the movie
-                console.log("Rating: " + movieName + " has an imdb rating of " + JSON.parse(body)['imdbRating'] + ".");
+                console.log("The title of the movie is " + JSON.parse(body)['Title'] + "." + "The release year of " + movieName + " is " + JSON.parse(body)['Year'] + ".");
+                // rating
+                console.log("It has an imdb rating of " + JSON.parse(body)['imdbRating'] + ".");
                 // country
-                console.log("Country: " + movieName + " has been produced in " + JSON.parse(body)['Country'] + ".");
+                console.log("Country: " + JSON.parse(body)['Country'] + ".");
                 // language
                 console.log("Language: " + JSON.parse(body)['Language'] + ".");
                 // plot
-                console.log(movieName + "'s plot: " + JSON.parse(body)['Plot'] + ".");
+                console.log("Plot: " + JSON.parse(body)['Plot'] + ".");
                 // actors
                 console.log("Actors in the movie: " + JSON.parse(body)['Actors'] + ".");
                 // rotten tomatoes rating
