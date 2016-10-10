@@ -46,9 +46,24 @@ switch (command) {
         findSong();
         break;
 
-        // case "do-what-it-says":
+    case "do-what-it-says":
+        var fs = require('fs');
 
-        // break;
+        fs.readFile("random.txt", "utf8", function(err, data) {
+                var dataArr = data.split(',');
+                console.log (dataArr[0]);
+                console.log (dataArr[1]);
+
+                console.log(process.argv[2]);
+
+                if(err) {
+                    return console.log(err);
+                }
+
+                });
+
+
+        break;
 
     default:
         text = "Looking forward to the Weekend";
