@@ -27,10 +27,15 @@ switch (command) {
         fs.readFile("random.txt", "utf8", function(err, data) {
 
             var dataArr = data.split(',');
-            var a = dataArr[0];
-            var b = dataArr[1];
+           
+            var command = dataArr[0];
+            var searchTerm = dataArr[1];
 
+            console.log(command, searchTerm);
 
+            // switchFunction(command, searchTerm);
+            // switchFunction(searchTerm, command);
+            switchFunction();
 
             if (err) {
                 return console.log(err);
@@ -46,24 +51,22 @@ switch (command) {
 }
 switchFunction(searchTerm,command);
 
-// spotify package
+//a function that searches spotify for a song 
 function findSong() {
-
+    // spotify package
     var spotify = require('spotify');
-
-    // var songName = process.argv[3];
-
+    // if user does not type anything/space
     if (searchTerm == null) {
-
+        // I use lookup instead of seach because I know the unique id of the song that is required in the instructions
         spotify.lookup({ type: 'track', id: '0hrBpAOgrt8RXigk83LLNE' }, function(err, data) {
+            // name of song and its artists
             console.log("Song name: " + data.name);
             console.log("Band: " + data.artists[0].name);
-
         })
 
     } else {
-
-        spotify.search({ type: 'track', query: songName }, function(err, data) {
+        // search for track
+        spotify.search({ type: 'track', query: searchTerm }, function(err, data) {
 
             if (err) {
                 console.log('Error occurred: ' + err);
@@ -76,18 +79,17 @@ function findSong() {
                 console.log("Name of artist: " + JSON.stringify(data.tracks.items[0].artists[0].name, null, 2));
                 // name of song
                 console.log("Song name: " + JSON.stringify(data.tracks.items[0].name, null, 2));
-
+                // preview of song
                 console.log("Use this link for a song preview: " + JSON.stringify(data.tracks.items[0].preview_url, null, 2));
-
                 // Album where the songs come from
                 console.log("Album name: " + JSON.stringify(data.tracks.items[0].album.name, null, 2));
-
                 console.log("========================");
             }
         });
     }
 }
 
+// find movie using request
 function findMovie() {
 
     var searchTerm = process.argv[3]; //input name of movie
