@@ -3,42 +3,15 @@ var request = require('request');
 var Twitter = require('twitter');
 var getSpotify = require('spotify');
 var keys = require('./keys.js');
-var child_process = require('child_process');
 
-var movieName = process.argv[3];
+var searchTerm = process.argv[3];
 
 //liri will have several commands; use switch
 var command = process.argv[2];
 
 switch (command) {
-    case "movie-this": // `node liri.js movie-this '<movie name here>'`
-        if (movieName == null) {
-            // movieName = "Mr.+Nobody";
-            queryUrl = 'http://www.omdbapi.com/?t=Mr.+Nobody&y=&plot=short&r=json';
-
-            request(queryUrl, function(error, response, body) {
-                // title of movie
-                console.log("The title of the movie is " + JSON.parse(body)['Title'] + "." + "The release year of " + movieName + " is " + JSON.parse(body)['Year'] + ".");
-                // rating
-                console.log("It has an imdb rating of " + JSON.parse(body)['imdbRating'] + ".");
-                // country
-                console.log("Country: " + JSON.parse(body)['Country'] + ".");
-                // language
-                console.log("Language: " + JSON.parse(body)['Language'] + ".");
-                // plot
-                console.log("Plot: " + JSON.parse(body)['Plot'] + ".");
-                // actors
-                console.log("Actors in the movie: " + JSON.parse(body)['Actors'] + ".");
-                // rotten tomatoes rating
-                console.log("Rotten tomatoes rating is: " + JSON.parse(body)['tomatoRating']);
-                // rotten tomatoes URL
-                console.log("Rotten tomatoes URL: " + JSON.parse(body)['tomatoURL']);
-
-            });
-
-        } else {
-            findMovie()
-        }
+    case "movie-this":
+        movieThis();
         break;
     case "my-tweets":
         findTweets();
@@ -50,20 +23,20 @@ switch (command) {
         var fs = require('fs');
 
         fs.readFile("random.txt", "utf8", function(err, data) {
-                
-                var dataArr = data.split(',');
-                console.log (dataArr[0]);
-                console.log (dataArr[1]);
 
-                // console.log(process.argv[2]);
+            var dataArr = data.split(',');
+            console.log(dataArr[0]);
+            console.log(dataArr[1]);
 
-                child_process.spawn(data);
+            // console.log(process.argv[2]);
 
-                if(err) {
-                    return console.log(err);
-                }
 
-                });
+
+            if (err) {
+                return console.log(err);
+            }
+
+        });
 
         break;
 
@@ -77,61 +50,56 @@ function findSong() {
 
     // var songName = process.argv[3];
 
-    if (movieName == null) {
+    if (searchTerm == null) {
 
         spotify.lookup({ type: 'track', id: '0hrBpAOgrt8RXigk83LLNE' }, function(err, data) {
-            console.log ("Song name: " + data.name);
-            console.log ("Band: " + data.artists[0].name);
+            console.log("Song name: " + data.name);
+            console.log("Band: " + data.artists[0].name);
 
-                })
+        })
 
     } else {
 
         spotify.search({ type: 'track', query: songName }, function(err, data) {
 
-                if (err) {
-                    console.log('Error occurred: ' + err);
-                    return;
-                    }
-                if (!err) {
+            if (err) {
+                console.log('Error occurred: ' + err);
+                return;
+            }
+            if (!err) {
 
-                    console.log("========================");
-                    // name of artist
-                    console.log("Name of artist: " + JSON.stringify(data.tracks.items[0].artists[0].name, null, 2));
-                    // name of song
-                    console.log("Song name: " + JSON.stringify(data.tracks.items[0].name, null, 2));
+                console.log("========================");
+                // name of artist
+                console.log("Name of artist: " + JSON.stringify(data.tracks.items[0].artists[0].name, null, 2));
+                // name of song
+                console.log("Song name: " + JSON.stringify(data.tracks.items[0].name, null, 2));
 
-                    console.log("Use this link for a song preview: " + JSON.stringify(data.tracks.items[0].preview_url, null, 2));
+                console.log("Use this link for a song preview: " + JSON.stringify(data.tracks.items[0].preview_url, null, 2));
 
-                    // Album where the songs come from
-                    console.log("Album name: " + JSON.stringify(data.tracks.items[0].album.name, null, 2));
+                // Album where the songs come from
+                console.log("Album name: " + JSON.stringify(data.tracks.items[0].album.name, null, 2));
 
-                    console.log("========================");
-                    }
+                console.log("========================");
+            }
         });
     }
 }
+
 function findMovie() {
 
-    var movieName = process.argv[3]; //input name of movie
+    var searchTerm = process.argv[3]; //input name of movie
     // query for omdb
-    queryUrl = 'http://www.omdbapi.com/?t=' + movieName + '&y=&plot=short&r=json&tomatoes=true';
+    queryUrl = 'http://www.omdbapi.com/?t=' + searchTerm + '&y=&plot=short&r=json&tomatoes=true';
     //request data only if there are no errors
     request(queryUrl, function(error, response, body) {
         if (!error && response.statusCode == 200) {
             console.log("========================");
-            // title of movie
-            console.log("The title of the movie is " + JSON.parse(body)['Title']);
-            // year of release
-            console.log("The release year of " + movieName + " is " + JSON.parse(body)['Year'] + ".");
-            //rating of the movie
-            console.log("Rating: " + movieName + " has an imdb rating of " + JSON.parse(body)['imdbRating'] + ".");
-            // country
-            console.log("Country: " + movieName + " has been produced in " + JSON.parse(body)['Country'] + ".");
-            // language
-            console.log("Language: " + JSON.parse(body)['Language'] + ".");
+            // title of movie & release year
+            console.log("The title of the movie is " + JSON.parse(body)['Title'] + "." + " The release year of " + JSON.parse(body)['Title'] + " is " + JSON.parse(body)['Year'] + ".");
+            // rating & country & language
+            console.log("It has an imdb rating of " + JSON.parse(body)['imdbRating'] + "." + " Filmed in: " + JSON.parse(body)['Country'] + "." + " Language: " + JSON.parse(body)['Language'] + ".");
             // plot
-            console.log(movieName + "'s plot: " + JSON.parse(body)['Plot'] + ".");
+            console.log("Plot: " + JSON.parse(body)['Plot'] + ".");
             // actors
             console.log("Actors in the movie: " + JSON.parse(body)['Actors'] + ".");
             // rotten tomatoes rating
@@ -139,7 +107,6 @@ function findMovie() {
             // rotten tomatoes URL
             console.log("Rotten tomatoes URL: " + JSON.parse(body)['tomatoURL']);
             console.log("========================");
-
         }
     })
 }
@@ -167,4 +134,25 @@ function findTweets() {
             return;
         }
     });
+}
+
+function movieThis() {
+    if (searchTerm == null) {
+        // movieName = "Mr.+Nobody";
+        queryUrl = 'http://www.omdbapi.com/?t=Mr.+Nobody&y=&plot=short&r=json';
+
+        request(queryUrl, function(error, response, body) {
+            // title of movie & release year
+            console.log("The title of the movie is " + JSON.parse(body)['Title'] + "." + "The release year of " + JSON.parse(body)['Title'] + " is " + JSON.parse(body)['Year'] + ".");
+            // rating & country & language
+            console.log("It has an imdb rating of " + JSON.parse(body)['imdbRating'] + "." + " Filmed in: " + JSON.parse(body)['Country'] + "." + " Language: " + JSON.parse(body)['Language'] + ".");
+            // plot
+            console.log("Plot: " + JSON.parse(body)['Plot'] + ".");
+            // actors
+            console.log("Actors in the movie: " + JSON.parse(body)['Actors'] + ".");
+        });
+
+    } else {
+        findMovie()
+    }
 }
