@@ -4,11 +4,13 @@ var Twitter = require('twitter');
 var getSpotify = require('spotify');
 var keys = require('./keys.js');
 
+// search term is the argument with 3 index
 var searchTerm = process.argv[3];
 
 //liri will have several commands; use switch
 var command = process.argv[2];
 
+function switchFunction(searchTerm, command) {
 switch (command) {
     case "movie-this":
         movieThis();
@@ -25,10 +27,8 @@ switch (command) {
         fs.readFile("random.txt", "utf8", function(err, data) {
 
             var dataArr = data.split(',');
-            console.log(dataArr[0]);
-            console.log(dataArr[1]);
-
-            // console.log(process.argv[2]);
+            var a = dataArr[0];
+            var b = dataArr[1];
 
 
 
@@ -43,7 +43,10 @@ switch (command) {
     default:
         text = "Looking forward to the Weekend";
 };
+}
+switchFunction(searchTerm,command);
 
+// spotify package
 function findSong() {
 
     var spotify = require('spotify');
@@ -138,7 +141,7 @@ function findTweets() {
 
 function movieThis() {
     if (searchTerm == null) {
-        // movieName = "Mr.+Nobody";
+
         queryUrl = 'http://www.omdbapi.com/?t=Mr.+Nobody&y=&plot=short&r=json';
 
         request(queryUrl, function(error, response, body) {
