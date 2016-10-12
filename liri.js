@@ -3,91 +3,87 @@ var request = require('request');
 var Twitter = require('twitter');
 var getSpotify = require('spotify');
 var keys = require('./keys.js');
-
+//liri will have several commands; use switch
+var command = process.argv[2];
 // search term is the argument with 3 index
 var searchTerm = process.argv[3];
 
-//liri will have several commands; use switch
-var command = process.argv[2];
-
 function switchFunction(command, searchTerm) {
-switch (command) {
-    case "movie-this":
-        movieThis();
-        break;
-    case "my-tweets":
-        findTweets();
-        break;
-    case "spotify-this-song":
-        findSong();
-        break;
-    case "do-what-it-says":
-        var fs = require('fs');
+    switch (command) {
+        case "movie-this":
+            movieThis();
+            break;
+        case "my-tweets":
+            findTweets();
+            break;
+        case "spotify-this-song":
+            findSong(searchTerm);
+            break;
+        case "do-what-it-says":
+            var fs = require('fs');
 
-        fs.readFile("random.txt", "utf8", function(err, data) {
+            fs.readFile("random.txt", "utf8", function(err, data) {
 
-            var dataArr = data.split(',');
-           
-            var command = dataArr[0];
-            var searchTerm = dataArr[1];
+                var dataArr = data.split(',');
 
-            console.log(command, searchTerm);
-            // console.log(searchTerm, command);
+                var command = dataArr[0];
+                var searchTerm = dataArr[1];
 
-            switchFunction(command, searchTerm);
-            // switchFunction(searchTerm, command);
-            // switchFunction();
+                console.log(command, searchTerm);
+                // console.log(searchTerm, command);
 
-            if (err) {
-                return console.log(err);
-            }
+                switchFunction(command, searchTerm);
+                // switchFunction(searchTerm, command);
+                // switchFunction();
 
-        });
+                if (err) {
+                    return console.log(err);
+                }
 
-        break;
+            });
 
-    default:
-        text = "Looking forward to the Weekend";
-};
+            break;
+
+        default:
+            text = "Looking forward to the Weekend";
+    };
 }
 switchFunction(command, searchTerm);
 
 //a function that searches spotify for a song 
-function findSong() {
+function findSong(searchTerm) {
     // spotify package
     var spotify = require('spotify');
-    // if user does not type anything/space
-    if (searchTerm == null) {
-        // I use lookup instead of seach because I know the unique id of the song that is required in the instructions
-        spotify.lookup({ type: 'track', id: '0hrBpAOgrt8RXigk83LLNE' }, function(err, data) {
-            // name of song and its artists
-            console.log("Song name: " + data.name);
-            console.log("Band: " + data.artists[0].name);
-        })
+    // search for track
+    spotify.search({ type: 'track', query: searchTerm }, function(err, data) {
 
-    } else {
-        // search for track
-        spotify.search({ type: 'track', query: searchTerm }, function(err, data) {
+        if (err || searchTerm == null) {
 
-            if (err) {
-                console.log('Error occurred: ' + err);
-                return;
-            }
-            if (!err) {
+            console.log('Because this error occurred: ' + err + " you will be hearing Ace of Base!");
+            console.log("=======================");
+            // I use lookup instead of seach because I know the unique id of the song that is required in the instructions
+            spotify.lookup({ type: 'track', id: '0hrBpAOgrt8RXigk83LLNE' }, function(err, data) {
+                // name of song and its artists
+                console.log("Song name: " + data.name);
+                console.log("Band: " + data.artists[0].name);
+            })
+            return;
+        }
 
-                console.log("========================");
-                // name of artist
-                console.log("Name of artist: " + JSON.stringify(data.tracks.items[0].artists[0].name, null, 2));
-                // name of song
-                console.log("Song name: " + JSON.stringify(data.tracks.items[0].name, null, 2));
-                // preview of song
-                console.log("Use this link for a song preview: " + JSON.stringify(data.tracks.items[0].preview_url, null, 2));
-                // Album where the songs come from
-                console.log("Album name: " + JSON.stringify(data.tracks.items[0].album.name, null, 2));
-                console.log("========================");
-            }
-        });
-    }
+        if (!err) {
+
+            console.log("========================");
+            // name of artist
+            console.log("Name of artist: " + JSON.stringify(data.tracks.items[0].artists[0].name, null, 2));
+            // name of song
+            console.log("Song name: " + JSON.stringify(data.tracks.items[0].name, null, 2));
+            // preview of song
+            console.log("Use this link for a song preview: " + JSON.stringify(data.tracks.items[0].preview_url, null, 2));
+            // Album where the songs come from
+            console.log("Album name: " + JSON.stringify(data.tracks.items[0].album.name, null, 2));
+            console.log("========================");
+        }
+    });
 }
 
 // find movie using request
