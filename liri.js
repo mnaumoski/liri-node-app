@@ -10,7 +10,7 @@ var searchTerm = process.argv[3];
 //liri will have several commands; use switch
 var command = process.argv[2];
 
-function switchFunction(searchTerm, command) {
+function switchFunction(command, searchTerm) {
 switch (command) {
     case "movie-this":
         movieThis();
@@ -32,10 +32,11 @@ switch (command) {
             var searchTerm = dataArr[1];
 
             console.log(command, searchTerm);
+            // console.log(searchTerm, command);
 
-            // switchFunction(command, searchTerm);
+            switchFunction(command, searchTerm);
             // switchFunction(searchTerm, command);
-            switchFunction();
+            // switchFunction();
 
             if (err) {
                 return console.log(err);
@@ -49,7 +50,7 @@ switch (command) {
         text = "Looking forward to the Weekend";
 };
 }
-switchFunction(searchTerm,command);
+switchFunction(command, searchTerm);
 
 //a function that searches spotify for a song 
 function findSong() {
